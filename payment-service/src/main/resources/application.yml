@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
+          auto-add-partitions: true
+      bindings:
+        order-in-0:
+          destination: com.github.dericksm.orderservice.order
+          group: paymentServiceGroup
+          consumer:
+            max-attempts: 4
+            back-off-initial-interval: 10000
+        paymentRejected-out-0:
+          destination: com.github.dericksm.paymentService.payment-rejected
+          group: paymentServiceGroup
+          consumer:
+            max-attempts: 4
+            back-off-initial-interval: 10000
+        paymentConfirmed-out-0:
+          destination: com.github.dericksm.paymentService.payment-confirmed
+          group: paymentServiceGroup
+          consumer:
+            max-attempts: 4
+            back-off-initial-interval: 10000
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      uri: mongodb+srv://dsm:dsm@cluster0.ryeut.mongodb.net/?retryWrites=true&w=majority
+      database: storedatabase
+      auto-index-creation: true
+server:
+  port: 8082
+
