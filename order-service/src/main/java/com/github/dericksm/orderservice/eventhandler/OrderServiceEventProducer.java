@@ -22,7 +22,7 @@ public class OrderServiceEventProducer {
         this.orderMapper = orderMapper;
     }
 
-    public void emitOrderCreatedEvent(Order order) {
+    public void emitCreatedOrderEvent(Order order) {
         OrderEvent orderEvent = orderMapper.orderToOrderEvent(order);
 
         Message<OrderEvent> message = MessageBuilder.withPayload(orderEvent)

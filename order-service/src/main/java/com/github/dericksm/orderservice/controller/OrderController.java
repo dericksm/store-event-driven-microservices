@@ -33,8 +33,8 @@ public class OrderController {
     @PostMapping
     public Mono<OrderResponse> initiate(@Valid @RequestBody CreateOrderRequest request) {
         return orderService.create(orderMapper.orderRequestToOrder(request))
-            .doOnNext(orderServiceEventProducer::emitOrderCreatedEvent)
-            .map(order -> orderMapper.orderToOrderResponse(order));
+            .doOnNext(orderServiceEventProducer::emitCreatedOrderEvent)
+            .map(orderMapper::orderToOrderResponse);
     }
 
 

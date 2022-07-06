@@ -9,6 +9,7 @@ import lombok.Data;
 public class OrderEvent {
 
     private String id;
+    private String customerId;
     private List<OrderItem> orderItems;
     private OrderStatus status;
     private Address address;

@@ -1,8 +1,7 @@
-package com.github.dericksm.orderservice.eventhandler;
+package com.github.dericksm.paymentservice.eventhandler;
 
-import com.github.dericksm.common.model.ConfirmedOrderEvent;
 import com.github.dericksm.common.model.RejectedOrderEvent;
-import com.github.dericksm.orderservice.service.OrderService;
+import com.github.dericksm.paymentservice.service.InvoiceService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class StockEventListener {
 
-    private final OrderService orderService;
+    private final InvoiceService invoiceService;
 
-    public StockEventListener(OrderService orderService) {
-        this.orderService = orderService;
+    public StockEventListener(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
     }
 
     @Bean
@@ -35,21 +34,7 @@ public class StockEventListener {
                 messageHeaders.get(KafkaHeaders.OFFSET, Long.class),
                 messageHeaders.get(IntegrationMessageHeaderAccessor.DELIVERY_ATTEMPT, AtomicInteger.class));
 
-            orderService.rejectOrder(rejectedOrderEvent.getId());
-        };
-    }
-
-    @Bean
-    public Consumer<Message<ConfirmedOrderEvent>> stockReserveConfirmed() {
-        return message -> {
-            ConfirmedOrderEvent confirmedOrderEvent = message.getPayload();
-            MessageHeaders messageHeaders = message.getHeaders();
-            log.info("ConfirmedOrderEvent with id '{}' received from bus. topic: {}, partition: {}, offset: {}, deliveryAttempt: {}",
-                confirmedOrderEvent.getOrderId(), messageHeaders.get(KafkaHeaders.RECEIVED_TOPIC, String.class),
-                messageHeaders.get(KafkaHeaders.RECEIVED_PARTITION_ID, Integer.class), messageHeaders.get(KafkaHeaders.OFFSET, Long.class),
-                messageHeaders.get(IntegrationMessageHeaderAccessor.DELIVERY_ATTEMPT, AtomicInteger.class));
-
-            orderService.rejectOrder(confirmedOrderEvent.getOrderId());
+            invoiceService.chargeBack(rejectedOrderEvent.getId());
         };
     }
 

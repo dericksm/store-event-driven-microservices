@@ -1,5 +1,5 @@
 package com.github.dericksm.common.model;
 
 public enum OrderStatus {
-    NEW, PENDING, PAID, SHIPPED, REJECTED, COMPLETED;
+    NEW, PENDING, PAID, SHIPPED, REJECTED, RESERVED, COMPLETED;
 }

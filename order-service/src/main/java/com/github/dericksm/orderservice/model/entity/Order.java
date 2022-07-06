@@ -1,5 +1,6 @@
 package com.github.dericksm.orderservice.model.entity;
 
+import com.github.dericksm.common.model.OrderStatus;
 import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.github.dericksm.productservice.controller;
 
+import com.github.dericksm.common.model.ProductResponse;
 import com.github.dericksm.productservice.mapper.ProductMapper;
 import com.github.dericksm.productservice.model.dto.request.CreateProductRequest;
-import com.github.dericksm.productservice.model.dto.response.ProductResponse;
 import com.github.dericksm.productservice.service.ProductService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
