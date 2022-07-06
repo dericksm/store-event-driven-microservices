@@ -5,6 +5,7 @@ spring:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true
+          auto-create-topics: true
       bindings:
         order-out-0:
           destination: com.github.dericksm.orderservice.order
@@ -16,25 +17,25 @@ spring:
           producer:
             partition-key-expression: headers['partitionKey']
             partition-count: 2
-        stockReservedRejected-in-0:
-          destination: com.github.dericksm.productservice.reserve-rejected
+        stockReserveRejected-in-0:
+          destination: com.github.dericksm.productservice.reserveRejected
           group: orderServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
-        stockConfirmedRejected-in-0:
-          destination: com.github.dericksm.productservice.reserve-confirmed
+        stockReserveConfirmed-in-0:
+          destination: com.github.dericksm.productservice.reserveConfirmed
           group: orderServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
-        paymentRejected-int-0:
-          destination: com.github.dericksm.paymentService.payment-rejected
+        paymentRejected-in-0:
+          destination: com.github.dericksm.paymentService.paymentRejected
           group: orderServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
-        paymentConfirmed-int-0:
+        paymentConfirmed-in-0:
           destination: com.github.dericksm.paymentService.payment-confirmed
           group: orderServiceGroup
           consumer:
@@ -42,9 +43,14 @@ spring:
             back-off-initial-interval: 10000
     schema-registry-client:
       endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+    function:
+      definition: stockReserveConfirmed;stockReserveRejected;paymentRejected;paymentConfirmed
   main:
     allow-bean-definition-overriding: true
   data:
     mongodb:
-      uri: mongodb+srv://dsm:dsm@cluster0.ryeut.mongodb.net/?retryWrites=true&w=majority
+      uri: 
       database: storedatabase
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false

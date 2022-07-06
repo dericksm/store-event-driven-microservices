@@ -5,6 +5,7 @@ spring:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
           auto-add-partitions: true
+          auto-create-topics: true
       bindings:
         order-in-0:
           destination: com.github.dericksm.orderservice.order
@@ -13,28 +14,30 @@ spring:
             max-attempts: 4
             back-off-initial-interval: 10000
         releaseStock-in-0:
-          destination: com.github.dericksm.orderservice.release-stock
+          destination: com.github.dericksm.orderservice.releaseStock
           group: productServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
         stockReserveRejected-out-0:
-          destination: com.github.dericksm.productservice.reserve-rejected
+          destination: com.github.dericksm.productservice.reserveRejected
           group: productServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
         stockReserveConfirmed-out-0:
-          destination: com.github.dericksm.productservice.reserve-confirmed
+          destination: com.github.dericksm.productservice.reserveConfirmed
           group: productServiceGroup
           consumer:
             max-attempts: 4
             back-off-initial-interval: 10000
+    function:
+      definition: order;releaseStock
   main:
     allow-bean-definition-overriding: true
   data:
     mongodb:
-      uri: mongodb+srv://dsm:dsm@cluster0.ryeut.mongodb.net/?retryWrites=true&w=majority
+      uri: 
       database: storedatabase
       auto-index-creation: true
 server:
